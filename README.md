@@ -8,6 +8,6 @@ DHT11 Temperature & Humidity Sensor
 
 16x2 LCD Display (the 16-pin one)
 
-5V Relay module (to control the fan)
+Motor driver IC
 
-Fan, breadboard, and some jumper wires
+DC Fan, breadboard, and some jumper wires
