@@ -1,0 +1,63 @@
+#include <LiquidCrystal.h>
+#include <DHT.h>
+
+#define DHTPIN A3
+#define DHTTYPE DHT11
+#define ENABLE 6
+#define ROTA 5
+#define ROTB 4
+
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal lcd(7,8,9,10,11,12);
+
+void setup() {
+  dht.begin();
+  lcd.begin(16, 2);
+
+  lcd.setCursor(0, 0);
+  lcd.print("Temp & Hum");
+  lcd.setCursor(0, 1);
+  lcd.print("Initializing");
+
+  delay(2500);
+  lcd.clear();
+
+  pinMode(ENABLE, OUTPUT);
+  pinMode(ROTA, OUTPUT);
+  pinMode(ROTB, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  float Temp = dht.readTemperature();
+  float Hum = dht.readHumidity();
+
+  if(isnan(Temp) || isnan(Hum)) {
+    lcd.setCursor(0, 0);
+    lcd.print("!!ERROR!!");
+    return;
+  }
+
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(Temp, 1);
+  lcd.print(" C");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Hum: ");
+  lcd.print(Hum, 0);
+  lcd.print(" %");
+
+  if(Temp >= 30) {
+    analogWrite(ENABLE, 195);
+    digitalWrite(ROTA, HIGH);
+    digitalWrite(ROTB, LOW);
+  } else {
+    analogWrite(ENABLE, 0);
+    digitalWrite(ROTA, LOW);
+    digitalWrite(ROTB, LOW);
+  }
+
+  delay(1000);
+}
